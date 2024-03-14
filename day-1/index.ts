@@ -30,7 +30,7 @@ Consider your entire calibration document. What is the sum of all of the calibra
 
 // 1. get arrays from text file lines
 
-const inputArray = getArrayFromInput();
+const inputArray = getArrayFromInput("./input.txt");
 
 // iterate the input array
 
@@ -51,6 +51,6 @@ function getCalibrationValues(line: string) {
   // return the first and last number from the numbers arr
 }
 
-function getArrayFromInput() {
-  return fs.readFileSync("./input.txt").toString().split(/\r?\n/);
+export function getArrayFromInput(path: string) {
+  return fs.readFileSync(path).toString().split(/\r?\n/);
 }
