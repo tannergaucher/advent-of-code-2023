@@ -1,6 +1,11 @@
 import { expect, describe, it } from "vitest";
 
-import { getRowsFromInput, checkAdjacency } from "./index";
+import {
+  getRowsFromInput,
+  isSymbol,
+  checkAdjacentRow,
+  checkCurrentRow,
+} from "./index";
 
 describe("get rows from input", () => {
   it("gets rows from input", () => {
@@ -10,16 +15,59 @@ describe("get rows from input", () => {
   });
 });
 
-describe("check adjacency", () => {
-  const rows = getRowsFromInput("./input.txt");
+describe("is symbol", () => {
+  it("returns true on a symbol", () => {
+    const symbol = isSymbol("=");
+    expect(symbol).toBe(true);
+  });
 
-  it("returns true if a number has an adjacent symbol", () => {
-    const adjacency = checkAdjacency({
-      rows,
-      rowIndex: 0,
-      elementIndex: 7,
+  it("returns false on no symbol", () => {
+    const symbol = isSymbol("4");
+
+    expect(symbol).toBe(false);
+  });
+});
+
+describe("check adjacent row", () => {
+  it("checks the adjacent row elements and returns true for an adjacent symbol", () => {
+    const isAdjacent = checkAdjacentRow({
+      elementIndex: 0,
+      row: "+......497...........................858...923...128..................227..801........487.....664...........................................",
+      numberCharsLength: 3,
     });
 
-    console.log(adjacency, "adjacency");
+    expect(isAdjacent).toBe(true);
+  });
+
+  it("checks the adjacent row elements and returns true for an adjacent symbol", () => {
+    const isAdjacent = checkAdjacentRow({
+      elementIndex: 2,
+      row: "+......497...........................858...923...128..................227..801........487.....664...........................................",
+      numberCharsLength: 3,
+    });
+
+    expect(isAdjacent).toBe(false);
+  });
+});
+
+describe("check current row", () => {
+  it("checks the current row and returns true for an adjacent symbol", () => {
+    const isAdjacent = checkCurrentRow({
+      row: "+.....=497...........................858...923...128..................227..801........487.....664...........................................",
+      startIndex: 7,
+      numberCharsLength: 3,
+    });
+
+    expect(isAdjacent).toBe(true);
+  });
+
+  it("checks the current row and returns false for no adjacent symbol", () => {
+    const isAdjacent = checkCurrentRow({
+      row: "+......497...........................858...923...128..................227..801........487.....664...........................................",
+      startIndex: 7,
+      numberCharsLength: 3,
+    });
+
+    expect(isAdjacent).toBe(false);
   });
 });
