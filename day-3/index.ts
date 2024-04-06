@@ -16,46 +16,12 @@ export function checkAdjacency({
   let number = "";
   let pointer = elementIndex;
 
-  let hasAdjacent: boolean = false;
-
   while (!Number.isNaN(parseInt(rows[rowIndex][pointer]))) {
     number += rows[rowIndex][pointer];
     pointer++;
   }
 
   const numberCharsLength = number.toString().split("").length;
-
-  const checkCurrentRow = ({
-    row,
-    startIndex,
-    numberCharsLength,
-  }: {
-    row: string;
-    startIndex: number;
-    numberCharsLength: number;
-  }) => {
-    const prevEl = row[startIndex - 1];
-
-    if (isSymbol(prevEl)) {
-      return true;
-    }
-
-    const nextEl = row[startIndex + numberCharsLength + 1];
-
-    if (isSymbol(nextEl)) {
-      return true;
-    }
-  };
-
-  const checkAdjacentRow = ({
-    startIndex,
-    row,
-    numberCharsLength,
-  }: {
-    startIndex: number;
-    row: string;
-    numberCharsLength: number;
-  }) => {};
 
   if (rowIndex === 0) {
     checkCurrentRow({
@@ -68,6 +34,29 @@ export function checkAdjacency({
     checkAdjacentRow({
       startIndex: elementIndex,
       row: rows[rowIndex + 1],
+      numberCharsLength,
+    });
+  }
+
+  if (rowIndex > 0 && rowIndex < rows.length) {
+    // otherwise check all
+    checkCurrentRow({
+      startIndex: elementIndex,
+      numberCharsLength,
+      row: rows[rowIndex],
+    });
+
+    // prev
+    checkAdjacentRow({
+      startIndex: elementIndex,
+      row: rows[rowIndex - 1],
+      numberCharsLength,
+    });
+
+    // and next
+    checkAdjacentRow({
+      startIndex: elementIndex,
+      row: rows[rowIndex - 1],
       numberCharsLength,
     });
   }
@@ -88,27 +77,6 @@ export function checkAdjacency({
     });
   }
 
-  // otherwise check all
-  checkCurrentRow({
-    startIndex: elementIndex,
-    numberCharsLength,
-    row: rows[rowIndex],
-  });
-
-  // prev
-  checkAdjacentRow({
-    startIndex: elementIndex,
-    row: rows[rowIndex - 1],
-    numberCharsLength,
-  });
-
-  // and next
-  checkAdjacentRow({
-    startIndex: elementIndex,
-    row: rows[rowIndex - 1],
-    numberCharsLength,
-  });
-
   return false;
 }
 
@@ -117,3 +85,43 @@ function isSymbol(char: string) {
 
   return symbols.includes(char);
 }
+
+const checkCurrentRow = ({
+  row,
+  startIndex,
+  numberCharsLength,
+}: {
+  row: string;
+  startIndex: number;
+  numberCharsLength: number;
+}) => {
+  const prevEl = row[startIndex - 1];
+
+  if (isSymbol(prevEl)) {
+    return true;
+  }
+
+  const nextEl = row[startIndex + numberCharsLength + 1];
+
+  if (isSymbol(nextEl)) {
+    return true;
+  }
+};
+
+const checkAdjacentRow = ({
+  startIndex,
+  row,
+  numberCharsLength,
+}: {
+  startIndex: number;
+  row: string;
+  numberCharsLength: number;
+}) => {
+  for (let i = startIndex - 1; i <= startIndex + numberCharsLength + 2; i++) {
+    console.log(row[i], "row i");
+
+    if (isSymbol(row[i])) {
+      return true;
+    }
+  }
+};
