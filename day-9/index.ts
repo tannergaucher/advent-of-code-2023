@@ -1,4 +1,5 @@
 import fs, { read } from "fs";
+
 // it creates an array of arrays from the input file
 export function createRowsFromInput(path: string) {
   const rows = fs.readFileSync(path).toString().split(/\r?\n/);
@@ -56,8 +57,6 @@ export function calculateNextInSequence({ array }: { array: number[][] }) {
   return array[0][array[0].length - 1];
 }
 
-const rows = createRowsFromInput("./input.txt");
-
 // it gets the sum of the next number in each row sequence
 function getNextInSequenceSum({ rows }: { rows: number[][] }) {
   const nextValues: number[] = [];
@@ -75,4 +74,5 @@ function getNextInSequenceSum({ rows }: { rows: number[][] }) {
   return nextValues.reduce((acc, el) => acc + el);
 }
 
-console.log(getNextInSequenceSum({ rows }));
+// answer: 1772145754
+console.log(getNextInSequenceSum({ rows: createRowsFromInput("./input.txt") }));
