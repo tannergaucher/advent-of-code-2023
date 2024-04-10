@@ -9,7 +9,7 @@ import {
 } from "./index";
 
 describe("createMapsFromInput", () => {
-  it("should return a map from the input", () => {
+  it("return a map from the input", () => {
     const { seeds, maps } = createMapsFromInput("./input.txt");
 
     expect(Array.isArray(seeds));
@@ -19,7 +19,7 @@ describe("createMapsFromInput", () => {
 });
 
 describe("getDestinationNumberFromMap", () => {
-  it("should iterate the map and return a final destination number", () => {
+  it("returns a destination number from a map", () => {
     const maps: Maps = {
       "seed-to-soil": [
         [3333452986, 2926455387, 455063168],
@@ -62,7 +62,7 @@ describe("getDestinationNumberFromMap", () => {
   });
 });
 
-describe("is in range", () => {
+describe("isInRange", () => {
   it("returns true if a number is in range", () => {
     const inRange = isInRange({
       source: 3,
@@ -84,7 +84,7 @@ describe("is in range", () => {
   });
 });
 
-describe("gets the destination number", () => {
+describe("getDestinationNumber", () => {
   it("returns the destination number", () => {
     const destinationNumber = getDestinationNumber({
       source: 3,
