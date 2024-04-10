@@ -9,7 +9,7 @@ type MapKey =
   | "temperature-to-humidity"
   | "humidity-to-location";
 
-type Map = Record<MapKey, number[][]>;
+type Maps = Record<MapKey, number[][]>;
 
 export function createMapFromInput(filePath: string) {
   const file = fs.readFileSync(filePath, "utf-8");
@@ -21,7 +21,7 @@ export function createMapFromInput(filePath: string) {
 
   const mapArr = lines.slice(1).map((line) => line.split(" ").map(Number));
 
-  const map: Map = {
+  const map: Maps = {
     "seed-to-soil": [],
     "soil-to-fertilizer": [],
     "fertilizer-to-water": [],
@@ -86,16 +86,52 @@ export function createMapFromInput(filePath: string) {
   return { seeds, map };
 }
 
-function getDestinationNumberFromMap({
+export function getDestinationNumberFromMap({
   map,
   source,
 }: {
-  map: Map;
   source: number;
+  map: Maps[MapKey];
 }) {
-  // lookup next map from current map
-  // iterate the map rows
-  // check if the source has a destination value
-  //    if so, return the destination value
-  // else return the source value
+  for (const arr of map) {
+    const inRange = isInRange({
+      source,
+      sourceStart: arr[1],
+      range: arr[2],
+    });
+    console.log(source, arr, inRange);
+    if (inRange) {
+      const destinationNumber = getDestinationNumber({
+        source,
+        sourceStart: arr[1],
+        destinationStart: arr[0],
+      });
+
+      return destinationNumber;
+    }
+  }
+}
+
+export function isInRange({ source, sourceStart, range }) {
+  const sourceEnd = sourceStart + range;
+
+  if (source >= sourceStart && source <= sourceEnd) {
+    return true;
+  }
+
+  return false;
+}
+
+export function getDestinationNumber({
+  source,
+  sourceStart,
+  destinationStart,
+}: {
+  source: number;
+  sourceStart: number;
+  destinationStart: number;
+}) {
+  const offset = source - sourceStart;
+
+  return destinationStart + offset;
 }
