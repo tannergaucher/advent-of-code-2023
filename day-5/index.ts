@@ -1,5 +1,16 @@
 import fs from "fs";
 
+type MapKey =
+  | "seed-to-soil"
+  | "soil-to-fertilizer"
+  | "fertilizer-to-water"
+  | "water-to-light"
+  | "light-to-temperature"
+  | "temperature-to-humidity"
+  | "humidity-to-location";
+
+type Map = Record<MapKey, number[][]>;
+
 export function createMapFromInput(filePath: string) {
   const file = fs.readFileSync(filePath, "utf-8");
   const lines = file.split("\n");
@@ -10,7 +21,7 @@ export function createMapFromInput(filePath: string) {
 
   const mapArr = lines.slice(1).map((line) => line.split(" ").map(Number));
 
-  const map: Record<string, number[][]> = {
+  const map: Map = {
     "seed-to-soil": [],
     "soil-to-fertilizer": [],
     "fertilizer-to-water": [],
@@ -79,14 +90,7 @@ function getDestinationNumberFromMap({
   map,
   source,
 }: {
-  map:
-    | "seed-to-soil"
-    | "soil-to-fertilizer"
-    | "fertilizer-to-water"
-    | "water-to-light"
-    | "light-to-temperature"
-    | "temperature-to-humidity"
-    | "humidity-to-location";
+  map: Map;
   source: number;
 }) {
   // lookup next map from current map
