@@ -144,8 +144,6 @@ export function getDestinationNumber({
   return destinationStart + offset;
 }
 
-const { seeds, maps } = createMapsFromInput("./input.txt");
-
 function getLowestLocationNumber({
   maps,
   seeds,
@@ -196,6 +194,8 @@ function getLowestLocationNumber({
 
   return Math.min(...locationNumbers);
 }
+
+const { seeds, maps } = createMapsFromInput("./input.txt");
 
 // answer: 382895070
 console.log(
