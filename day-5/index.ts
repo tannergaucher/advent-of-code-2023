@@ -9,9 +9,9 @@ type MapKey =
   | "temperature-to-humidity"
   | "humidity-to-location";
 
-type Maps = Record<MapKey, number[][]>;
+export type Maps = Record<MapKey, number[][]>;
 
-export function createMapFromInput(filePath: string) {
+export function createMapsFromInput(filePath: string) {
   const file = fs.readFileSync(filePath, "utf-8");
   const lines = file.split("\n");
   const seeds = lines[0]
@@ -21,7 +21,7 @@ export function createMapFromInput(filePath: string) {
 
   const mapArr = lines.slice(1).map((line) => line.split(" ").map(Number));
 
-  const map: Maps = {
+  const maps: Maps = {
     "seed-to-soil": [],
     "soil-to-fertilizer": [],
     "fertilizer-to-water": [],
@@ -31,59 +31,57 @@ export function createMapFromInput(filePath: string) {
     "humidity-to-location": [],
   };
 
-  let counter = 0;
+  let pointer = 0;
 
   mapArr.forEach((el) => {
     if (el.length === 1) {
-      counter++;
+      pointer++;
     }
 
-    if (counter === 1) {
+    if (pointer === 1) {
       if (el.length === 3) {
-        console.log(el);
-
-        map["seed-to-soil"].push(el);
+        maps["seed-to-soil"].push(el);
       }
     }
 
-    if (counter === 2) {
+    if (pointer === 2) {
       if (el.length === 3) {
-        map["soil-to-fertilizer"].push(el);
+        maps["soil-to-fertilizer"].push(el);
       }
     }
 
-    if (counter === 3) {
+    if (pointer === 3) {
       if (el.length === 3) {
-        map["fertilizer-to-water"].push(el);
+        maps["fertilizer-to-water"].push(el);
       }
     }
 
-    if (counter === 4) {
+    if (pointer === 4) {
       if (el.length === 3) {
-        map["water-to-light"].push(el);
+        maps["water-to-light"].push(el);
       }
     }
 
-    if (counter === 5) {
+    if (pointer === 5) {
       if (el.length === 3) {
-        map["light-to-temperature"].push(el);
+        maps["light-to-temperature"].push(el);
       }
     }
 
-    if (counter === 6) {
+    if (pointer === 6) {
       if (el.length === 3) {
-        map["temperature-to-humidity"].push(el);
+        maps["temperature-to-humidity"].push(el);
       }
     }
 
-    if (counter === 7) {
+    if (pointer === 7) {
       if (el.length === 3) {
-        map["humidity-to-location"].push(el);
+        maps["humidity-to-location"].push(el);
       }
     }
   });
 
-  return { seeds, map };
+  return { seeds, maps };
 }
 
 export function getDestinationNumberFromMap({
@@ -99,7 +97,7 @@ export function getDestinationNumberFromMap({
       sourceStart: arr[1],
       range: arr[2],
     });
-    console.log(source, arr, inRange);
+
     if (inRange) {
       const destinationNumber = getDestinationNumber({
         source,
@@ -110,9 +108,19 @@ export function getDestinationNumberFromMap({
       return destinationNumber;
     }
   }
+
+  return source;
 }
 
-export function isInRange({ source, sourceStart, range }) {
+export function isInRange({
+  source,
+  sourceStart,
+  range,
+}: {
+  source: number;
+  sourceStart: number;
+  range: number;
+}) {
   const sourceEnd = sourceStart + range;
 
   if (source >= sourceStart && source <= sourceEnd) {
@@ -135,3 +143,64 @@ export function getDestinationNumber({
 
   return destinationStart + offset;
 }
+
+const { seeds, maps } = createMapsFromInput("./input.txt");
+
+function getLowestLocationNumber({
+  maps,
+  seeds,
+}: {
+  maps: Maps;
+  seeds: number[];
+}) {
+  const locationNumbers: number[] = [];
+
+  seeds.forEach((seed) => {
+    const soilNumber = getDestinationNumberFromMap({
+      source: seed,
+      map: maps["seed-to-soil"],
+    });
+
+    const fertilizerNumber = getDestinationNumberFromMap({
+      source: soilNumber,
+      map: maps["soil-to-fertilizer"],
+    });
+
+    const waterNumber = getDestinationNumberFromMap({
+      source: fertilizerNumber,
+      map: maps["fertilizer-to-water"],
+    });
+
+    const lightNumber = getDestinationNumberFromMap({
+      source: waterNumber,
+      map: maps["water-to-light"],
+    });
+
+    const temperatureNumber = getDestinationNumberFromMap({
+      source: lightNumber,
+      map: maps["light-to-temperature"],
+    });
+
+    const humidityNumber = getDestinationNumberFromMap({
+      source: temperatureNumber,
+      map: maps["temperature-to-humidity"],
+    });
+
+    const locationNumber = getDestinationNumberFromMap({
+      source: humidityNumber,
+      map: maps["humidity-to-location"],
+    });
+
+    locationNumbers.push(locationNumber);
+  });
+
+  return Math.min(...locationNumbers);
+}
+
+// answer: 382895070
+console.log(
+  getLowestLocationNumber({
+    maps,
+    seeds,
+  })
+);
