@@ -44,7 +44,7 @@ export function createRacesFromInput(path: string) {
 type RaceOutcome = { chargeTime: number; distanceTraveled: number };
 
 export function getRacePossibilitiesCount({ race }: { race: Race }) {
-  const possibilities: RaceOutcome[] = [];
+  const possibleOutcomes: RaceOutcome[] = [];
 
   for (let i = 0; i <= race.time; i++) {
     const chargeTime = i;
@@ -53,19 +53,19 @@ export function getRacePossibilitiesCount({ race }: { race: Race }) {
     const distanceTraveled = travelTime * speed;
 
     if (i === 0) {
-      possibilities.push({
+      possibleOutcomes.push({
         chargeTime: 0,
         distanceTraveled: 0,
       });
     } else {
-      possibilities.push({
+      possibleOutcomes.push({
         chargeTime,
         distanceTraveled,
       });
     }
   }
 
-  return possibilities.filter(
+  return possibleOutcomes.filter(
     (possibility) => possibility.distanceTraveled > race.recordDistance
   ).length;
 }
@@ -73,7 +73,7 @@ export function getRacePossibilitiesCount({ race }: { race: Race }) {
 function getRacePossibilitiesProduct({ races }: { races: Race[] }) {
   const counts: number[] = [];
 
-  races.map((race) => {
+  races.forEach((race) => {
     const count = getRacePossibilitiesCount({ race });
 
     counts.push(count);
