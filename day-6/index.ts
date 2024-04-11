@@ -1,6 +1,6 @@
 import fs from "fs";
 
-type Race = { time: number; distance: number };
+type Race = { time: number; recordDistance: number };
 
 export function createRacesFromInput(path: string) {
   const races: Race[] = [];
@@ -34,7 +34,7 @@ export function createRacesFromInput(path: string) {
   times.forEach((time, index) => {
     races.push({
       time,
-      distance: distances[index],
+      recordDistance: distances[index],
     });
   });
 
