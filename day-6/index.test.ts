@@ -7,20 +7,20 @@ describe("createRacesFromInput", () => {
     const races = createRacesFromInput("./input.txt");
 
     expect(races).toEqual([
-      { time: 53, distance: 275 },
-      { time: 71, distance: 1181 },
-      { time: 78, distance: 1215 },
-      { time: 80, distance: 1524 },
+      { time: 53, recordDistance: 275 },
+      { time: 71, recordDistance: 1181 },
+      { time: 78, recordDistance: 1215 },
+      { time: 80, recordDistance: 1524 },
     ]);
   });
 });
 
 describe("getRacePossibilities", () => {
-  it.only(
+  it(
     "should return an array of objects which contain the time and the distance traveled for that time"
   );
 
-  const race = { time: 53, distance: 275 };
+  const race = { time: 53, recordDistance: 275 };
 
   const possibilities = getRacePossibilities({ race });
 
