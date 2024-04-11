@@ -41,4 +41,29 @@ export function createRacesFromInput(path: string) {
   return races;
 }
 
-export function getRacePossibilities() {}
+type RaceOutcome = { chargeTime: number; distanceTraveled: number };
+
+export function getRacePossibilities({ race }: { race: Race }) {
+  const possibilities: RaceOutcome[] = [];
+
+  for (let i = 0; i <= race.time; i++) {
+    const chargeTime = i;
+    const travelTime = race.time - chargeTime;
+    const speed = i;
+    const distanceTraveled = travelTime * speed;
+
+    if (i === 0) {
+      possibilities.push({
+        chargeTime: 0,
+        distanceTraveled: 0,
+      });
+    } else {
+      possibilities.push({
+        chargeTime,
+        distanceTraveled,
+      });
+    }
+  }
+
+  return possibilities;
+}
