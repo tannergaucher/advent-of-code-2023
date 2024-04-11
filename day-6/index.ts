@@ -43,7 +43,7 @@ export function createRacesFromInput(path: string) {
 
 type RaceOutcome = { chargeTime: number; distanceTraveled: number };
 
-export function getRacePossibilities({ race }: { race: Race }) {
+export function getRacePossibilitiesCount({ race }: { race: Race }) {
   const possibilities: RaceOutcome[] = [];
 
   for (let i = 0; i <= race.time; i++) {
@@ -65,5 +65,24 @@ export function getRacePossibilities({ race }: { race: Race }) {
     }
   }
 
-  return possibilities;
+  return possibilities.filter(
+    (possibility) => possibility.distanceTraveled > race.recordDistance
+  ).length;
 }
+
+function getRacePossibilitiesProduct({ races }: { races: Race[] }) {
+  const counts: number[] = [];
+
+  races.map((race) => {
+    const count = getRacePossibilitiesCount({ race });
+
+    counts.push(count);
+  });
+
+  return counts.reduce((acc, curr) => acc * curr);
+}
+
+// answer: 449820
+console.log(
+  getRacePossibilitiesProduct({ races: createRacesFromInput("./input.txt") })
+);
