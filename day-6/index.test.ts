@@ -24,8 +24,6 @@ describe("getRacePossibilities", () => {
 
   const possibilities = getRacePossibilities({ race });
 
-  console.log(possibilities);
-
   expect(Array.isArray(possibilities));
 
   expect(possibilities).toEqual([
