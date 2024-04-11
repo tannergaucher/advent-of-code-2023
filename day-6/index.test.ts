@@ -25,6 +25,7 @@ describe("getRacePossibilities", () => {
   const possibilities = getRacePossibilities({ race });
 
   expect(Array.isArray(possibilities));
+  expect(possibilities.length).toBe(54);
 
   expect(possibilities).toEqual([
     { chargeTime: 0, distanceTraveled: 0 },
