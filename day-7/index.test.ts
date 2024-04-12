@@ -5,6 +5,7 @@ import {
   getHandType,
   getComparisonIndex,
   type Hand,
+  sortHandsByComparisonIndex,
 } from "./index";
 
 describe("getHandsFromInput", () => {
@@ -137,5 +138,57 @@ describe("getComparisonIndex", () => {
     const comparisonIndex = getComparisonIndex({ hands });
 
     expect(comparisonIndex).toBe(4);
+  });
+});
+
+describe("sortHandsByComparisonIndex", () => {
+  it("sorts hands at comparison index 0", () => {
+    const hands: Hand[] = [
+      ["12345", "100"],
+      ["34512", "200"],
+      ["K4712", "200"],
+      ["23451", "300"],
+    ];
+
+    const comparisonIndex = 0;
+
+    const expectedHands: Hand[] = [
+      ["K4712", "200"],
+      ["34512", "200"],
+      ["23451", "300"],
+      ["12345", "100"],
+    ];
+
+    const sortedHands = sortHandsByComparisonIndex({
+      hands,
+      comparisonIndex,
+    });
+
+    expect(sortedHands).toEqual(expectedHands);
+  });
+
+  it("sorts hands at comparison index 1", () => {
+    const hands: Hand[] = [
+      ["12345", "100"],
+      ["34512", "200"],
+      ["38712", "200"],
+      ["23451", "300"],
+    ];
+
+    const comparisonIndex = 1;
+
+    const sortedHands = sortHandsByComparisonIndex({
+      hands,
+      comparisonIndex,
+    });
+
+    const expectedHands: Hand[] = [
+      ["38712", "200"],
+      ["34512", "200"],
+      ["23451", "300"],
+      ["12345", "100"],
+    ];
+
+    expect(sortedHands).toEqual(expectedHands);
   });
 });

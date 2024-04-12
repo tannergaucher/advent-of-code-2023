@@ -96,3 +96,32 @@ export function getComparisonIndex({ hands }: { hands: Hand[] }) {
 
   return comparisonIndex;
 }
+
+export function sortHandsByComparisonIndex({
+  hands,
+  comparisonIndex,
+}: {
+  hands: Hand[];
+  comparisonIndex: number;
+}) {
+  const sequence = [
+    "K",
+    "Q",
+    "J",
+    "10",
+    "9",
+    "8",
+    "7",
+    "6",
+    "5",
+    "4",
+    "3",
+    "2",
+    "1",
+  ];
+  return hands.sort(
+    (a, b) =>
+      sequence.indexOf(a[0][comparisonIndex]) -
+      sequence.indexOf(b[0][comparisonIndex])
+  );
+}
