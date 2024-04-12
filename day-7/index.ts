@@ -4,7 +4,7 @@ type Cards = string;
 
 type Bid = string;
 
-type Hand = [Cards, Bid];
+export type Hand = [Cards, Bid];
 
 type HandType =
   | "FiveOfAKind"
@@ -62,4 +62,37 @@ export function getHandType({ cards }: { cards: Cards }): HandType {
   }
 
   return "HighCard";
+}
+
+export function getComparisonIndex({ hands }: { hands: Hand[] }) {
+  let comparisonIndex: number | null = null;
+  let pointer = 0;
+
+  while (!comparisonIndex) {
+    if (pointer === 4) {
+      comparisonIndex = 4;
+    }
+
+    let cardCountObj: Record<string, number> = {};
+
+    for (const hand of hands) {
+      const cards = hand[0];
+      const card = cards[pointer];
+
+      if (!cardCountObj[card]) {
+        cardCountObj[card] = 1;
+      } else {
+        cardCountObj[card] = cardCountObj[card] + 1;
+      }
+    }
+
+    if (Object.values(cardCountObj).every((count) => count === 1)) {
+      comparisonIndex = pointer;
+      break;
+    }
+
+    pointer++;
+  }
+
+  return comparisonIndex;
 }

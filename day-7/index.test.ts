@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { getHandsFromInput, getHandType } from "./index";
+import {
+  getHandsFromInput,
+  getHandType,
+  getComparisonIndex,
+  type Hand,
+} from "./index";
 
 describe("getHandsFromInput", () => {
   it("gets an array of hands from the input file", () => {
@@ -65,5 +70,72 @@ describe("getHandType", () => {
     });
 
     expect(handType).toBe("HighCard");
+  });
+});
+
+describe("getComparisonIndex", () => {
+  it("gets the comparison index at the first card", () => {
+    const hands: Hand[] = [
+      ["12345", "100"],
+      ["34512", "200"],
+      ["K4712", "200"],
+      ["23451", "300"],
+    ];
+
+    const comparisonIndex = getComparisonIndex({ hands });
+
+    expect(comparisonIndex).toBe(0);
+  });
+
+  it("gets the comparison index at the second card", () => {
+    const hands: Hand[] = [
+      ["12345", "100"],
+      ["34512", "200"],
+      ["15782", "200"],
+      ["23451", "300"],
+    ];
+
+    const comparisonIndex = getComparisonIndex({ hands });
+
+    expect(comparisonIndex).toBe(1);
+  });
+
+  it("gets the comparison index at the third card", () => {
+    const hands: Hand[] = [
+      ["12345", "100"],
+      ["32519", "200"],
+      ["15782", "200"],
+      ["23451", "300"],
+    ];
+
+    const comparisonIndex = getComparisonIndex({ hands });
+
+    expect(comparisonIndex).toBe(2);
+  });
+
+  it("gets the comparison index at the fourth card", () => {
+    const hands: Hand[] = [
+      ["12745", "100"],
+      ["32519", "200"],
+      ["15782", "200"],
+      ["23451", "300"],
+    ];
+
+    const comparisonIndex = getComparisonIndex({ hands });
+
+    expect(comparisonIndex).toBe(3);
+  });
+
+  it("gets the comparison index at the fifth card", () => {
+    const hands: Hand[] = [
+      ["12745", "100"],
+      ["32589", "200"],
+      ["15782", "200"],
+      ["23451", "300"],
+    ];
+
+    const comparisonIndex = getComparisonIndex({ hands });
+
+    expect(comparisonIndex).toBe(4);
   });
 });
