@@ -73,7 +73,7 @@ function countStepsToTarget({
     }
 
     node = lookupNode({
-      node: node.trim(),
+      node,
       direction: directions[directionsIndexPointer],
       nodesMap,
     });
