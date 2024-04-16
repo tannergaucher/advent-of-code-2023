@@ -41,13 +41,13 @@ describe("depthFirstSearch", () => {
       direction: "north",
     });
 
-    expect(visited[0][1]).toBe("black");
+    expect(visited[0][1]).toBe("grey");
     expect(stack.length).toBe(search.stack.length);
     expect(search.matrixIndex.x).toBe(matrixIndex.x);
     expect(search.matrixIndex.y).toBe(matrixIndex.y);
   });
 
-  it("searches three lines west and then backs one line", () => {
+  it.only("searches three lines west and then backs one line", () => {
     const graph: MapNode[][] = [
       [".", ".", ".", ".", "."],
       [".", "S", "-", "7", "."],
@@ -57,7 +57,7 @@ describe("depthFirstSearch", () => {
     ];
 
     const visited: VisitedNode[][] = [
-      ["white", "black", "white", "white", "white"],
+      ["white", "grey", "white", "white", "white"],
       ["white", "start", "white", "white", "white"],
       ["white", "white", "white", "white", "white"],
       ["white", "white", "white", "white", "white"],

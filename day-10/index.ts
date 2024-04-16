@@ -39,17 +39,20 @@ export function depthFirstSearch({
   let xIndex = getXIndex(matrixIndex, direction);
 
   nextNode = graph[yIndex][xIndex];
+  stack.push(nextNode);
 
   // temp, todo handle isValid
   const nextNodeIsValid = nextNode === "-" || nextNode === "7";
 
   if (!nextNodeIsValid) {
-    visited[yIndex].splice(xIndex, 1, "black");
+    visited[yIndex].splice(xIndex, 1, "grey");
+    console.log("handle backtrack", nextNode, yIndex, xIndex);
+    // pop from the stack
+    // decrement indexes
   }
 
   if (nextNodeIsValid) {
-    stack.push(nextNode);
-    visited[yIndex].splice(xIndex, 1, "black");
+    visited[yIndex].splice(xIndex, 1, "grey");
 
     matrixIndex = {
       y: yIndex,
