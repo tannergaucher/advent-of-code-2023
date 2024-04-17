@@ -9,6 +9,8 @@ export type Matrix = {
   x: number;
 };
 
+export type StackElement = { node: MapNode; matrix: Matrix };
+
 const isValidConnection = (node: MapNode | null) => {
   if (!node) {
     return false;
@@ -113,26 +115,33 @@ export function getNextMatrix({
   return null;
 }
 
-// function visitNext({
-//   y,
-//   x,
-//   map,
-//   stack,
-// }: Matrix & { map: MapNode[][]; stack: Matrix & { node: MapNode } }) {
-//   const nextNode = map[y][x];
+export function visitNext({
+  matrix,
+  map,
+  stack,
+  visited,
+}: {
+  matrix: Matrix;
+  map: MapNode[][];
+  stack: StackElement[];
+  visited: VisitedNode[][];
+}) {
+  const nextNode = map[matrix.y][matrix.x];
+  const nextNodeValid = isValidConnection(nextNode);
 
-//   const nextNodeValid = isValidConnection(nextNode);
+  if (nextNodeValid) {
+    stack.push({
+      node: nextNode,
+      matrix,
+    });
 
-//   if (nextNodeValid) {
-//     // set grey in visited array
-//     // push {node, y, x } to stack
+    visited[matrix.y].splice(matrix.x, 1, "grey");
 
-//     return {
-//       node: nextNode,
-//       y,
-//       x,
-//     };
-//   }
+    return {
+      node: nextNode,
+      stack,
+    };
+  }
 
-//   return null;
-// }
+  return null;
+}

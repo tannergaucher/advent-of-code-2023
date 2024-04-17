@@ -1,16 +1,22 @@
 import { describe, expect, it } from "vitest";
 
-import { type MapNode, type VisitedNode, getNextMatrix } from "./index";
+import {
+  type MapNode,
+  type StackElement,
+  type VisitedNode,
+  getNextMatrix,
+  visitNext,
+} from "./index";
+
+const map: MapNode[][] = [
+  [".", ".", ".", ".", "."],
+  [".", "S", "-", "7", "."],
+  [".", "|", ".", "|", "."],
+  [".", "L", "-", "J", "."],
+  [".", ".", ".", ".", "."],
+];
 
 describe("getNextMatrix", () => {
-  const map: MapNode[][] = [
-    [".", ".", ".", ".", "."],
-    [".", "S", "-", "7", "."],
-    [".", "|", ".", "|", "."],
-    [".", "L", "-", "J", "."],
-    [".", ".", ".", ".", "."],
-  ];
-
   it("gets the next matrix", () => {
     const visited: VisitedNode[][] = [
       ["white", "white", "white", "white", "white"],
@@ -32,7 +38,7 @@ describe("getNextMatrix", () => {
     expect(next?.y).not.toBe(null);
   });
 
-  it.only("handles turning corners", () => {
+  it("handles turning corners", () => {
     const visited: VisitedNode[][] = [
       ["white", "white", "white", "white", "white"],
       ["white", "start", "white", "white", "white"],
@@ -50,5 +56,41 @@ describe("getNextMatrix", () => {
 
     expect(next?.y).toBe(3);
     expect(next?.x).toBe(2);
+  });
+});
+
+describe("visitNext", () => {
+  it("handles visiting the next node", () => {
+    const stack: StackElement[] = [
+      {
+        node: "S",
+        matrix: {
+          y: 1,
+          x: 2,
+        },
+      },
+    ];
+
+    const visited: VisitedNode[][] = [
+      ["white", "white", "white", "white", "white"],
+      ["white", "start", "white", "white", "white"],
+      ["white", "white", "white", "white", "white"],
+      ["white", "white", "white", "white", "white"],
+      ["white", "white", "white", "white", "white"],
+    ];
+
+    const next = visitNext({
+      map,
+      visited,
+      stack,
+      matrix: {
+        y: 2,
+        x: 1,
+      },
+    });
+
+    expect(next?.node).toBe("|");
+    expect(next?.stack.length).toBe(2);
+    expect(visited[2][1]).toBe("grey");
   });
 });
