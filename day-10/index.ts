@@ -18,14 +18,26 @@ const isValidConnection = (node: MapNode | null) => {
   return node !== ".";
 };
 
-function getNextMatrix({
+const isWhite = ({
+  matrix,
+  visited,
+}: {
+  matrix: Matrix;
+  visited: VisitedNode[][];
+}) => {
+  return visited[matrix.y][matrix.x] === "white";
+};
+
+export function getNextMatrix({
   currentY,
   currentX,
   map,
+  visited,
 }: {
   currentY: number;
   currentX: number;
   map: MapNode[][];
+  visited: VisitedNode[][];
 }): Matrix | null {
   const north = currentY === 0 ? null : map[currentY - 1][currentX];
   const south =
@@ -34,28 +46,64 @@ function getNextMatrix({
     currentX === map[currentY].length - 1 ? null : map[currentY][currentX + 1];
   const west = currentX === 0 ? null : map[currentY][currentX - 1];
 
-  if (isValidConnection(north)) {
+  if (
+    isValidConnection(north) &&
+    isWhite({
+      visited,
+      matrix: {
+        y: currentY - 1,
+        x: currentX,
+      },
+    })
+  ) {
     return {
       y: currentY - 1,
       x: currentX,
     };
   }
 
-  if (isValidConnection(south)) {
+  if (
+    isValidConnection(south) &&
+    isWhite({
+      visited,
+      matrix: {
+        y: currentY - 1,
+        x: currentX,
+      },
+    })
+  ) {
     return {
       y: currentY + 1,
       x: currentX,
     };
   }
 
-  if (isValidConnection(east)) {
+  if (
+    isValidConnection(east) &&
+    isWhite({
+      visited,
+      matrix: {
+        y: currentY,
+        x: currentX + 1,
+      },
+    })
+  ) {
     return {
       y: currentY,
       x: currentX + 1,
     };
   }
 
-  if (isValidConnection(west)) {
+  if (
+    isValidConnection(west) &&
+    isWhite({
+      visited,
+      matrix: {
+        y: currentY,
+        x: currentX - 1,
+      },
+    })
+  ) {
     return {
       y: currentY,
       x: currentX - 1,
@@ -65,17 +113,26 @@ function getNextMatrix({
   return null;
 }
 
-function visitNext({ y, x, map }: Matrix & { map: MapNode[][] }) {
-  const nextNode = map[y][x];
-  const nextNodeValid = isValidConnection(nextNode);
+// function visitNext({
+//   y,
+//   x,
+//   map,
+//   stack,
+// }: Matrix & { map: MapNode[][]; stack: Matrix & { node: MapNode } }) {
+//   const nextNode = map[y][x];
 
-  if (nextNodeValid) {
-    return {
-      node: nextNode,
-      y,
-      x,
-    };
-  }
+//   const nextNodeValid = isValidConnection(nextNode);
 
-  return null;
-}
+//   if (nextNodeValid) {
+//     // set grey in visited array
+//     // push {node, y, x } to stack
+
+//     return {
+//       node: nextNode,
+//       y,
+//       x,
+//     };
+//   }
+
+//   return null;
+// }
