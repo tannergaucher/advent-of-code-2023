@@ -112,6 +112,8 @@ export function getNextMatrix({
     };
   }
 
+  visited[currentY].splice(currentX, 1, "black");
+
   return null;
 }
 
