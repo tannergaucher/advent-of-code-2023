@@ -4,97 +4,78 @@ export type MapNode = "S" | "." | "|" | "-" | "L" | "J" | "7" | "F";
 
 export type Direction = "north" | "south" | "east" | "west";
 
-export type MatrixIndex = {
-  x: number;
+export type Matrix = {
   y: number;
+  x: number;
 };
 
-/* 
-| is a vertical pipe connecting north and south.
-- is a horizontal pipe connecting east and west.
-L is a 90-degree bend connecting north and east.
-J is a 90-degree bend connecting north and west.
-7 is a 90-degree bend connecting south and west.
-F is a 90-degree bend connecting south and east.
-. is ground; there is no pipe in this tile.
-S is the starting position of the animal; there is a pipe on this tile, but your sketch doesn't show what shape the pipe has.
-*/
+const isValidConnection = (node: MapNode | null) => {
+  if (!node) {
+    return false;
+  }
 
-export function depthFirstSearch({
-  graph,
-  visited,
-  matrixIndex,
-  stack,
-  direction,
+  // todo handle pipe connections by comparing prev and current node
+  return node !== ".";
+};
+
+function getNextMatrix({
+  currentY,
+  currentX,
+  map,
 }: {
-  visited: VisitedNode[][];
-  graph: MapNode[][];
-  stack: MapNode[];
-  matrixIndex: MatrixIndex;
-  direction: Direction;
-}) {
-  let nextNode: MapNode | null = null;
+  currentY: number;
+  currentX: number;
+  map: MapNode[][];
+}): Matrix | null {
+  const north = currentY === 0 ? null : map[currentY - 1][currentX];
+  const south =
+    currentY === map.length - 1 ? null : map[currentY + 1][currentX];
+  const east =
+    currentX === map[currentY].length - 1 ? null : map[currentY][currentX + 1];
+  const west = currentX === 0 ? null : map[currentY][currentX - 1];
 
-  let yIndex = getYIndex(matrixIndex, direction);
-  let xIndex = getXIndex(matrixIndex, direction);
-
-  nextNode = graph[yIndex][xIndex];
-  stack.push(nextNode);
-
-  // temp, todo handle isValid
-  const nextNodeIsValid = nextNode === "-" || nextNode === "7";
-
-  if (!nextNodeIsValid) {
-    visited[yIndex].splice(xIndex, 1, "grey");
-    console.log("handle backtrack", nextNode, yIndex, xIndex);
-    // pop from the stack
-    // decrement indexes
-  }
-
-  if (nextNodeIsValid) {
-    visited[yIndex].splice(xIndex, 1, "grey");
-
-    matrixIndex = {
-      y: yIndex,
-      x: xIndex,
+  if (isValidConnection(north)) {
+    return {
+      y: currentY - 1,
+      x: currentX,
     };
-
-    depthFirstSearch({
-      graph,
-      visited,
-      stack,
-      direction,
-      matrixIndex,
-    });
   }
 
-  return {
-    visited,
-    stack,
-    matrixIndex,
-  };
+  if (isValidConnection(south)) {
+    return {
+      y: currentY + 1,
+      x: currentX,
+    };
+  }
+
+  if (isValidConnection(east)) {
+    return {
+      y: currentY,
+      x: currentX + 1,
+    };
+  }
+
+  if (isValidConnection(west)) {
+    return {
+      y: currentY,
+      x: currentX - 1,
+    };
+  }
+
+  return null;
 }
 
-const getYIndex = (matrixIndex: MatrixIndex, direction: Direction) => {
-  if (direction === "north") {
-    return matrixIndex.y - 1;
+function visitNext({ y, x, map }: Matrix & { map: MapNode[][] }) {
+  const nextNode = map[y][x];
+  const nextNodeValid = isValidConnection(nextNode);
+
+  if (nextNodeValid) {
+    return {
+      node: nextNode,
+      y,
+      x,
+    };
   }
 
-  if (direction === "south") {
-    return matrixIndex.y + 1;
-  }
-
-  return matrixIndex.y;
-};
-
-const getXIndex = (matrixIndex: MatrixIndex, direction: Direction) => {
-  if (direction === "east") {
-    return matrixIndex.x + 1;
-  }
-
-  if (direction === "west") {
-    return matrixIndex.x - 1;
-  }
-
-  return matrixIndex.x;
-};
+  return null;
+}
