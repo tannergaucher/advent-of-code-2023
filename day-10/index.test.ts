@@ -6,6 +6,7 @@ import {
   type VisitedNode,
   getNextMatrix,
   visitNext,
+  traverseMap,
 } from "./index";
 
 const map: MapNode[][] = [
@@ -92,5 +93,32 @@ describe("visitNext", () => {
     expect(next?.node).toBe("|");
     expect(next?.stack.length).toBe(2);
     expect(visited[2][1]).toBe("grey");
+  });
+});
+
+describe("traverse map", () => {
+  it.only("handles traversing the map", () => {
+    const map: MapNode[][] = [
+      [".", ".", ".", ".", "."],
+      [".", "S", "-", "7", "."],
+      [".", "|", ".", "|", "."],
+      [".", "L", "-", "J", "."],
+      [".", ".", ".", ".", "."],
+    ];
+
+    const visited: VisitedNode[][] = [
+      ["white", "white", "white", "white", "white"],
+      ["white", "start", "white", "white", "white"],
+      ["white", "white", "white", "white", "white"],
+      ["white", "white", "white", "white", "white"],
+      ["white", "white", "white", "white", "white"],
+    ];
+
+    const pathStack = traverseMap({
+      map,
+      visited,
+    });
+
+    expect(pathStack.length).toBe(8);
   });
 });

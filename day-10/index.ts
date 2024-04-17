@@ -147,3 +147,63 @@ export function visitNext({
 
   return null;
 }
+
+export function traverseMap({
+  map,
+  visited,
+}: {
+  map: MapNode[][];
+  visited: VisitedNode[][];
+}) {
+  const stack: StackElement[] = [];
+
+  let backToStart = false;
+
+  const [startMatrix] = map.map((row, rowIndex) => {
+    const y = rowIndex;
+    const x = row.findIndex((el) => el === "S");
+    return {
+      y,
+      x,
+    };
+  });
+
+  stack.push({
+    node: "S",
+    matrix: {
+      y: startMatrix.y,
+      x: startMatrix.x,
+    },
+  });
+
+  while (backToStart === false) {
+    const nextMatrix = getNextMatrix({
+      currentY: stack[stack.length - 1].matrix.y,
+      currentX: stack[stack.length - 1].matrix.x,
+      map,
+      visited,
+    });
+
+    if (nextMatrix) {
+      const nextNode = visitNext({
+        stack,
+        map,
+        visited,
+        matrix: {
+          y: nextMatrix.y,
+          x: nextMatrix.x,
+        },
+      });
+
+      console.log(nextNode, "nextNode");
+
+      if (nextNode?.node === "S") {
+        backToStart = true;
+      }
+    } else {
+      // handle backtracking on no valid next matrix from current
+    }
+  }
+
+  return stack;
+}
