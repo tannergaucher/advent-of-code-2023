@@ -1,3 +1,4 @@
+import fs from "fs";
 /*
 
 Day 11: Cosmic Expansion
@@ -99,3 +100,35 @@ In this example, after expanding the universe, the sum of the shortest path betw
 Expand the universe, then find the length of the shortest path between every pair of galaxies. What is the sum of these lengths?
 
 */
+
+// 1. create rows from input
+export function createRowsFromInput(path: string) {
+  return fs.readFileSync(path).toString().split(/\r?\n/);
+}
+
+// 2. create expanded universe from rows (rows with no galaxy take up twice their size (another row))
+export function getRowUniverses({ row }: { row: string }) {
+  return row.split("").filter((el) => el === "#");
+}
+
+export function getColumnUniverses({
+  rows,
+  columnIndex,
+}: {
+  rows: string[];
+  columnIndex: number;
+}) {
+  const universes: string[] = [];
+  // iterate the rows
+  rows.forEach((row) => {
+    if (row[columnIndex] === "#") {
+      universes.push(row[columnIndex]);
+    }
+  });
+
+  return universes;
+}
+
+// 3. calculate the shortest path between each galaxy pair
+
+// 4. return the sum of the shortest paths
