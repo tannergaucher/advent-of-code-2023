@@ -17,14 +17,14 @@ describe("get rows from input", () => {
 
 describe("is symbol", () => {
   it("returns true on a symbol", () => {
-    const symbol = isSymbol("=");
-    expect(symbol).toBe(true);
+  
+    expect(isSymbol("#")).toBe(true);
   });
 
   it("returns false on no symbol", () => {
-    const symbol = isSymbol("4");
-
-    expect(symbol).toBe(false);
+    
+    expect(isSymbol("4")).toBe(false);
+    expect(isSymbol(".")).toBe(false)
   });
 });
 
